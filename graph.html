@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>График остаточного ресурса и график уровня шума</title>
+  <style>
+    .chart-container {
+      width: 50%;
+      height: 100vh;
+      display: inline-block;
+      padding: 20px; /* Добавлено для отступа от края */
+      position: relative; /* Добавлено для позиционирования надписи */
+    }
+    .chart-container::after {
+  content: "";
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: rgb(255, 0, 242);
+  border-radius: 50%;
+  z-index: 1;
+}
+    .y-axis-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-weight: bold;
+    }
+    .button {
+      margin-top: 20px; /* Отступ вниз от графика */
+      font-size: 18px; /* Увеличение размера кнопки */
+    }
+  </style>
+</head>
+<body>
+  <h1>График остаточного ресурса и график уровня шума для двигателя "Электро Двигатель 3ф.АИР 100L2 380В 5,5кВт 3000об/мин 1081 DRIVE ИЭК"  </h1>
+  <div class="chart-container">
+    <canvas id="chart1"></canvas>
+    <div class="x-axis-label">Диапазон дат (год месяц день)</div>
+    <div class="y-axis-label">Процент остаточного ресурса (ПОР %) </div>
+  </div>
+  <div class="chart-container">
+    <canvas id="chart2"></canvas>
+    <div class="x-axis-label">Диапазон дат (год месяц день)</div>
+    <div class="y-axis-label">Уровень шума (ДБ)</div>
+    <button class="button" onclick="window.location.href='work.html'">Вернуться к таблице</button> <!-- Переименована кнопка и добавлены стили -->
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+  
+
+    // Получение контекста для рисования первого графика
+    let canvas1 = document.getElementById('chart1');
+    let context1 = canvas1.getContext('2d');
+
+    // Получение контекста для рисования второго графика
+    let canvas2 = document.getElementById('chart2');
+    let context2 = canvas2.getContext('2d');
+
+    // Функция для создания графика
+    const createChart = (canvas, context, xData, yData, label) => {
+      let data = {
+        labels: xData,
+        datasets: [{
+          label: label,
+          data: yData,
+          pointStyle: false,
+          fill: canvas.id === 'chart1' ? true : false,
+          borderWidth: 1,
+          borderColor: '#000000', // Черный цвет
+          backgroundColor: canvas.id === 'chart1' ? yData.map((value, index) => {
+            let minValue = Math.min(...yData); // Находим минимальное значение в массиве yData
+            if (minValue >= 70 && minValue <= 100) {
+              return index % 2 === 0 ? ' #008000' : '#A8E4A0'; // Светлозеленый цвет
+            } else if (minValue >= 40 && minValue < 70) {
+              return index % 2 === 0 ? '#FFFF00' : '#EDFF21'; // Светло желтый цвет
+            } else if (minValue >= 0 && minValue < 40 && value !== minValue) {
+              return index % 2 === 0 ? '#d61400' : '#FFB6C1'; // Светлокрасный цвет
+            } else if (index === 0) {
+  return '#0000FF'; // Синий цвет для точки с минимальным значением
+} else {
+  return '#000000'; // Возврат черного цвета для остальных значений
+}
+  
+          }) : [] // Пустой массив для второго графика
+        }]
+      };
+
+      let config = {
+        type: 'line',
+        data: data,
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: Math.max(...yData), // Максимальное значение шкалы
+              ticks: {
+                stepSize: 12, // Шаг шкалы
+                callback: function(value) {
+                  return canvas.id === 'chart1' ? value + '%' : value; // Отображение значения с процентами только для первого графика
+                }
+              }
+            }
+          }
+        }
+      };
+
+      let chart = new Chart(context, config);
+
+      if (canvas.id === 'chart1') {
+        // Отметка точек возрастания
+        let increasingPoints = xData.filter((data, index) => index > 0 && yData[index] > yData[index - 1]);
+        let increasingData = increasingPoints.map((date, index) => ({ x: date, y: chart.scales.y.getPixelForValue(yData[index]) }));
+
+        chart.data.datasets.push({
+          label: 'Точки возрастания',
+          data: increasingData,
+          pointStyle: 'circle',
+          pointRadius: 20,
+          pointBackgroundColor: '#FF0000', // Красный цвет
+          pointBorderWidth: 10,
+          fill: false
+        });
+      }
+
+      chart.update();
+    };
+
+    // Получение данных из файла query.json
+    let request1 = new XMLHttpRequest();
+    request1.open('GET', './query.json', false);
+    request1.send(null);
+
+    if (request1.status === 200) {
+      let data1 = JSON.parse(request1.responseText);
+      let xData1 = [];
+      let yData1 = [];
+
+      for (let i = 0; i < data1.data.length; i++) {
+        xData1.push(data1.data[i].date);
+        yData1.push(data1.data[i].value);
+      }
+
+      // Сортировка данных по дате
+      let sortedData1 = xData1.map((date, index) => ({ date: date, value: yData1[index] })).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      // Создание первого графика
+      createChart(canvas1, context1, sortedData1.map(data => data.date), sortedData1.map(data => data.value), 'График остаточного ресурса');
+    }
+
+    // Получение данных из файла query1.json
+    let request2 = new XMLHttpRequest();
+    request2.open('GET', './query1.json', false);
+    request2.send(null);
+
+    if (request2.status === 200) {
+      let data2 = JSON.parse(request2.responseText);
+      let xData2 = [];
+      let yData2 = [];
+
+      for (let i = 0; i < data2.data.length; i++) {
+        xData2.push(data2.data[i].date);
+        yData2.push(data2.data[i].value);
+      }
+
+      // Сортировка данных по дате
+      let sortedData2 = xData2.map((date, index) => ({ date: date, value: yData2[index] })).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      // Создание второго графика
+      createChart(canvas2, context2, sortedData2.map(data => data.date), sortedData2.map(data => data.value), 'График уровня шума');
+    }
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница для работы</title>
+    <link rel="stylesheet" href="work.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="ryc.html">Руководство пользователем</a></li>
+                <li><a href="work.html">Страница для работы</a></li>
+                <li><a href="admin.html">Админ панель</a></li>
+            </ul>
+        </nav>
+        <button class="register-btn">Регистрация</button>
+        <button class="in-btn">Вход</button>
+    </header>
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Состав предприятия</th>
+                    <th>Описание</th>
+                    <th>Дата последнего ТО</th>
+                    <th>Уровень шума</th>
+                    <th>Остаточный ресурс</th>
+                    <th>Ответственный</th>
+                    <th>График</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <details>
+                            <summary >Завод</summary>
+                            <strong>Угольно перерабатывающий</strong> 
+                            <details>
+                                <summary >Цех</summary>
+                               <strong>№2 руда-обрабатывающий<strong>
+                                <details>
+                                    <summary >Мастерские</summary>
+                                    
+                                    <details>
+                                        <summary >№1 слесарная</summary>
+                                    </details>
+                                    <details>
+                                        <summary >№2 хим контроля</summary>
+                                    </details>
+                                    <details>
+                                        <summary >№3 отгрузочная</summary>
+                                    </details>
+                                    <details>
+                                        <summary >№4 ремонтная</summary>
+                                    </details>
+                                    <details>
+                                        <summary >№5 токарная</summary>
+                                        <details>
+                                            <summary class="bold"><strong>Двигатель</strong></summary>
+                                            <strong>Эл.двигатель #1</strong>
+                                        </details>
+                                    </details>
+                                </details>
+                            </details>
+                        </details>
+                    </td>
+                    <td>       
+                        <strong>Эл.двигатель #1  Электро Двигатель 3ф.АИР 100L2 380В 5,5кВт 3000об/мин 1081 DRIVE ИЭК</strong> 
+                    </td>
+                    <td>2023-12-09</td>
+                    <td>151 дБ</td>
+                    <td>15%</td>
+                    <td>Иванов И.И.</td>
+                    <td><button id="graph-btn">Показать график для Эл.двигатель #1</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <div class="contacts">
+            <p>Контакты:</p>
+            <p>Телефон: 123-456-789</p>
+            <p>Email: info@example.com</p>
+        </div>
+    </footer>
+    <script src="work.js"></script>
+    <script>
+        // Оповещение о необходимости ремонта двигателя при остаточном ресурсе менее 40%
+        if (parseInt(document.querySelector('td:nth-child(7)').textContent) < 40) {
+            alert('Необходимо чинить двигатель!');
+        }
+    </script>
+</body>
+</html>

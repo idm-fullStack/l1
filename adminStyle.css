@@ -1,0 +1,103 @@
+header {
+    background-color: #f2f2f2;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.register-btn {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.main {
+    margin-top: 20px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.register-btn {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 500px;
+}
+
+.in-btn {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+#activity {
+    margin: 20px auto;
+    max-width: 600px;
+    background-color: #f2f2f2;
+    border: 2px solid #ccc;
+    padding: 10px;
+}
+
+footer {
+    background-color: #f2f2f2;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.contacts p {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+/* Responsive styles for buttons */
+@media screen and (max-width: 768px) {
+    .register-btn,
+    .in-btn {
+        margin-left: 0;
+        margin-top: 10px;
+        display: block;
+        width: 100%;
+    }
+}
